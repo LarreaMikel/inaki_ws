@@ -90,7 +90,8 @@ def generate_launch_description():
 
     car = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(pkg_summit, 'launch2', 'spawn_car.launch.py'),
+            os.path.join(pkg_summit, 'launch', 'spawn_summit.launch.py'),
+            #os.path.join(pkg_summit, 'launch2', 'spawn_car.launch.py'),
         )
     )
 
