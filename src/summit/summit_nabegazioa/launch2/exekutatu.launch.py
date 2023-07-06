@@ -27,7 +27,7 @@ def generate_launch_description():
     launch_dir = os.path.join(bringup_dir, 'launch')
     world_config = DeclareLaunchArgument(
           'world',
-          default_value=[os.path.join(pkg_summit, 'worlds', 'simple.world'), ''],
+          default_value=[os.path.join(pkg_summit, 'worlds', 'biltegia.world'), ''],
           description='SDF world file')
 
     use_simulator = "True" # LaunchConfiguration('use_simulator')
