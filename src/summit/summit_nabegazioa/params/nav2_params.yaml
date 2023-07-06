@@ -1,0 +1,370 @@
+amcl:
+  ros__parameters:
+    use_sim_time: True #Habilita el uso del tiempo simulado. Si se establece en True, el sistema utilizará el tiempo simulado en lugar del tiempo del sistema real.
+    #Parámetros que controlan el ruido esperado del proceso en las estimaciones de la odometría. Ajustar estos valores puede afectar la precisión de la localización del robot.
+    alpha1: 0.2 # Expected process noise in odometry’s rotation estimate from rotation.
+    alpha2: 0.2 # Expected process noise in odometry’s rotation estimate from translation.
+    alpha3: 0.2 # Expected process noise in odometry’s translation estimate from translation.
+    alpha4: 0.2 # Expected process noise in odometry’s translation estimate from rotation.
+    alpha5: 0.2 # For Omni models only: translation noise.
+    base_frame_id: "base_footprint" #Establece el marco de referencia base del robot utilizado por AMCL.
+    beam_skip_distance: 0.5 # Especifica la distancia a partir de la cual se puede omitir el procesamiento de los rayos del láser.
+    beam_skip_error_threshold: 0.9 #Define el umbral de error de los rayos del láser a partir del cual se puede omitir el procesamiento.
+    beam_skip_threshold: 0.3 #Establece el umbral de distancia a partir del cual se puede omitir el procesamiento de los rayos del láser.
+    do_beamskip: false #Habilita o deshabilita la funcionalidad de omitir rayos del láser.
+    global_frame_id: "map" #Define el marco de referencia global utilizado por AMCL.
+    lambda_short: 0.1 #Controla la probabilidad de que un rayo del láser sea demasiado corto.
+    laser_likelihood_max_dist: 2.0 #Define la distancia máxima a la que se puede tener en cuenta la probabilidad de los rayos del láser.
+    #Especifican el rango máximo y mínimo del escáner láser que se tendrán en cuenta en la localización.
+    laser_max_range: -1.0 # Maximum scan range to be considered, -1.0 will cause the laser’s reported maximum range to be used.
+    laser_min_range: -1.0 # Minimum scan range to be considered, -1.0 will cause the laser’s reported minimum range to be used.
+    laser_model_type: "likelihood_field" #Define el tipo de modelo de láser utilizado por AMCL para calcular la probabilidad de los rayos del láser.
+    max_beams: 60 #Establece el número máximo de rayos del láser que se tendrán en cuenta en la localización.
+    #Especifican el número máximo y mínimo de partículas utilizadas en el filtro de partículas de AMCL.
+    max_particles: 2000
+    min_particles: 500
+    odom_frame_id: "odom" #Establece el marco de referencia de la odometría utilizado por AMCL.
+    pf_err: 0.05
+    pf_z: 0.99
+    recovery_alpha_fast: 0.0
+    recovery_alpha_slow: 0.0
+    resample_interval: 1
+    robot_model_type: "nav2_amcl::DifferentialMotionModel" #Define el tipo de modelo de movimiento del robot utilizado por AMCL para estimar su posición.
+    save_pose_rate: 0.5 #Establece la frecuencia a la que se guardarán las poses estimadas por AMCL.
+    sigma_hit: 0.2 #Define la desviación estándar utilizada en el cálculo de la probabilidad de acierto de los rayos del láser.
+    tf_broadcast: true #Habilita o deshabilita la publicación de transformaciones TF por parte de AMCL.
+    transform_tolerance: 1.0 #Define la tolerancia utilizada para las transformaciones TF en la localización del robot.
+    # Establecen los umbrales mínimos de cambio angular y lineal en la odometría para realizar actualizaciones en AMCL.
+    update_min_a: 0.2 
+    update_min_d: 0.25
+    # Son parámetros utilizados en el modelo probabilístico de la localización basada en el escáner láser. 
+    #Estos parámetros controlan las probabilidades de los diferentes casos de detección del láser:
+    z_hit: 0.5
+    z_max: 0.05
+    z_rand: 0.5
+    z_short: 0.05
+    scan_topic: scan
+
+amcl_map_client:
+  ros__parameters:
+    use_sim_time: True # Utilizar tiempo simulado en el cliente de mapa AMCL.
+
+amcl_rclcpp_node:
+  ros__parameters:
+    use_sim_time: True  # Utilizar tiempo simulado en el nodo AMCL de ROS 2.
+
+bt_navigator:
+  ros__parameters:
+    use_sim_time: True # Utilizar tiempo simulado en el nodo bt_navigator.
+    global_frame: map # Marco de referencia global utilizado por el navegador de árbol de comportamientos.
+    robot_base_frame: base_link # Marco de referencia de la base del robot.
+    odom_topic: summit/odom # Tópico utilizado para obtener la odometría del robot.
+    bt_loop_duration: 10 # Duración del bucle principal del navegador de árbol de comportamientos.
+    default_server_timeout: 20 # Tiempo máximo de espera para las respuestas de los servidores por defecto.
+    enable_groot_monitoring: True # Habilitar la monitorización a través de Groot.
+    groot_zmq_publisher_port: 1666 # Puerto de publicación utilizado por Groot para la monitorización.
+    groot_zmq_server_port: 1667  #Puerto del servidor utilizado por Groot para la monitorización.
+    # 'default_nav_through_poses_bt_xml' and 'default_nav_to_pose_bt_xml' are use defaults:
+    # nav2_bt_navigator/navigate_to_pose_w_replanning_and_recovery.xml
+    # nav2_bt_navigator/navigate_through_poses_w_replanning_and_recovery.xml
+    # They can be set here or via a RewrittenYaml remap from a parent launch file to Nav2.
+    # default_nav_to_pose_bt_xml: /opt/ros/galactic/share/nav2_bt_navigator/behavior_trees/navigate_w_replanning_time.xml
+    #default_nav_to_pose_bt_xml: /home/user/inakiacker_ws/src/inaki_acker/car_description/behavior_trees/navigate_w_replanning_time2.xml
+    plugin_lib_names:
+    - nav2_compute_path_to_pose_action_bt_node
+    - nav2_compute_path_through_poses_action_bt_node
+    - nav2_follow_path_action_bt_node
+    - nav2_back_up_action_bt_node
+    - nav2_spin_action_bt_node
+    - nav2_wait_action_bt_node
+    - nav2_clear_costmap_service_bt_node
+    - nav2_is_stuck_condition_bt_node
+    - nav2_goal_reached_condition_bt_node
+    - nav2_goal_updated_condition_bt_node
+    - nav2_initial_pose_received_condition_bt_node
+    - nav2_reinitialize_global_localization_service_bt_node
+    - nav2_rate_controller_bt_node
+    - nav2_distance_controller_bt_node
+    - nav2_speed_controller_bt_node
+    - nav2_truncate_path_action_bt_node
+    - nav2_goal_updater_node_bt_node
+    - nav2_recovery_node_bt_node
+    - nav2_pipeline_sequence_bt_node
+    - nav2_round_robin_node_bt_node
+    - nav2_transform_available_condition_bt_node
+    - nav2_time_expired_condition_bt_node
+    - nav2_distance_traveled_condition_bt_node
+    - nav2_single_trigger_bt_node
+    - nav2_is_battery_low_condition_bt_node
+    - nav2_navigate_through_poses_action_bt_node
+    - nav2_navigate_to_pose_action_bt_node
+    - nav2_remove_passed_goals_action_bt_node
+    - nav2_planner_selector_bt_node
+    - nav2_controller_selector_bt_node
+    - nav2_goal_checker_selector_bt_node
+
+bt_navigator_rclcpp_node:
+  ros__parameters:
+    use_sim_time: True # Utilizar tiempo simulado en el nodo bt_navigator_rclcpp_node.
+
+controller_server:
+  ros__parameters:
+    use_sim_time: True # Utilizar tiempo simulado en el servidor de controlador.
+    odom_topic: "summit/odom" # Tópico utilizado para obtener la odometría del robot.
+    controller_frequency: 20.0 # Frecuencia de actualización del controlador.
+    min_x_velocity_threshold: 0.001 # Umbral mínimo de velocidad lineal en el eje x.
+    min_y_velocity_threshold: 0.5 # Umbral mínimo de velocidad lineal en el eje y.
+    min_theta_velocity_threshold: 0.001  # Umbral mínimo de velocidad angular.
+    failure_tolerance: 0.3 # Tolerancia de fallos del controlador.
+    progress_checker_plugin: "progress_checker" # Plugin utilizado para verificar el progreso de la trayectoria.
+    goal_checker_plugins: ["general_goal_checker"] # # Lista de plugins utilizados para verificar si se alcanzó el objetivo.
+    controller_plugins: ["FollowPath"] # Lista de plugins de controlador utilizados para ejecutar la trayectoria.
+
+    # Progress checker parameters
+    progress_checker:
+      plugin: "nav2_controller::SimpleProgressChecker" # Plugin utilizado para verificar el progreso de la trayectoria.
+      required_movement_radius: 0.5 # Radio mínimo de movimiento requerido para considerarlo como progreso.
+      movement_time_allowance: 10.0 # Tiempo máximo permitido para el movimiento antes de considerarlo como falta de progreso.
+    # Goal checker parameters
+    #precise_goal_checker:
+    #  plugin: "nav2_controller::SimpleGoalChecker"
+    #  xy_goal_tolerance: 0.25
+    #  yaw_goal_tolerance: 0.25
+    #  stateful: True
+    general_goal_checker:
+      stateful: True  # Indica si el verificador de objetivo mantiene un estado interno.
+      plugin: "nav2_controller::SimpleGoalChecker" # Plugin utilizado para verificar si se alcanzó el objetivo.
+      xy_goal_tolerance: 0.1 # Tolerancia de objetivo en las coordenadas x e y.
+      yaw_goal_tolerance: 0.25 # Tolerancia de objetivo en el ángulo de orientación (yaw).
+
+
+    # Line following controller
+    # RPP
+    FollowPath:
+      plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController" # Plugin utilizado para el control de seguimiento de trayectoria
+      allow_reversing: true # Permite el movimiento en reversa.
+      approach_velocity_scaling_dist: 0.6 # Distancia a la cual se comienza a escalar la velocidad de aproximación.
+      cost_scaling_dist: 0.6 # Distancia a la cual se comienza a escalar el costo de la trayectoria.
+      cost_scaling_gain: 1.0  # Ganancia utilizada para escalar el costo de la trayectoria.
+      desired_linear_vel: 0.5 # Velocidad lineal deseada del robot.
+      inflation_cost_scaling_factor: 3.0 # Factor de escala utilizado para el costo de inflado.
+      lookahead_dist: 0.6 # Distancia a la cual se busca el punto de referencia para el seguimiento de trayectoria.
+      lookahead_time: 1.5 # Tiempo de adelanto utilizado para el seguimiento de trayectoria.
+      max_allowed_time_to_collision_up_to_carrot: 1.0 # Tiempo máximo permitido para la colisión anticipada.
+      max_angular_accel: 3.2 # Aceleración angular máxima del robot.
+      max_lookahead_dist: 0.9 # Distancia máxima de búsqueda para el punto de referencia de seguimiento de trayectoria.
+      max_robot_pose_search_dist: 1.4875 # Distancia máxima de búsqueda para la posición del robot en la trayectoria.
+      min_approach_linear_velocity: 0.05 # Velocidad lineal mínima de aproximación al objetivo.
+      min_lookahead_dist: 0.3 # Distancia mínima de búsqueda para el punto de referencia de seguimiento de trayectoria.
+      regulated_linear_scaling_min_radius: 0.9 # Radio mínimo de escala lineal regulada.
+      regulated_linear_scaling_min_speed: 0.25 # Velocidad mínima de escala lineal regulada.
+      transform_tolerance: 0.1 # Tolerancia de transformación utilizada en el seguimiento de trayectoria.
+      use_cost_regulated_linear_velocity_scaling: true  # Utiliza escala de velocidad lineal regulada basada en el costo.
+      use_interpolation: true # Utiliza interpolación en el seguimiento de trayectoria.
+      use_regulated_linear_velocity_scaling: true # Utiliza escala de velocidad lineal regulada.
+      use_rotate_to_heading: false # Deshabilita la rotación hacia la orientación del objetivo.
+      use_velocity_scaled_lookahead_dist: false # Utiliza escala de distancia de búsqueda de punto de referencia basada en la velocidad.
+
+      
+controller_server_rclcpp_node:
+  ros__parameters:
+    use_sim_time: True # Utilizar tiempo simulado en el nodo controller_server_rclcpp_node.
+
+
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      update_frequency: 5.0 # Frecuencia de actualización del mapa de costos local.
+      publish_frequency: 2.0 # Frecuencia de publicación del mapa de costos local.
+      global_frame: odom # Marco de referencia global utilizado por el mapa de costos local.
+      robot_base_frame: base_link # Marco de referencia de la base del robot.
+      use_sim_time: True # Utilizar tiempo simulado.
+      rolling_window: true # Ventana de desplazamiento habilitada.
+      width: 3 # Ancho del mapa de costos local en celdas.
+      height: 3  # Altura del mapa de costos local en celdas.
+      resolution: 0.05 # Resolución del mapa de costos local en metros por celda.
+      footprint: "[ [0.29, 0.225], [0.29, -0.225], [-0.29, -0.225], [-0.29, 0.225] ]" # Huella del robot utilizada en el mapa de costos local.
+      footprint_padding: 0.03 # Margen de padding aplicado a la huella del robot en el mapa de costos local.
+      plugins: ["static_layer", "inflation_layer"]  # Plugins utilizados en el mapa de costos local.
+      static_layer:
+        plugin: "nav2_costmap_2d::StaticLayer" # Plugin utilizado para la capa estática del mapa de costos local.
+        map_subscribe_transient_local: False # Suscripción persistente al tópico de mapa.
+        map_topic: /map # Tópico utilizado para recibir el mapa estático.
+        enabled: True # Capa estática habilitada.
+      inflation_layer: 
+        plugin: "nav2_costmap_2d::InflationLayer" # Plugin utilizado para la capa de inflado del mapa de costos local.
+        cost_scaling_factor: 3.0 # Factor de escala aplicado al costo en la capa de inflado.
+        inflation_radius: 0.55 # Radio de inflado aplicado en la capa de inflado.
+        enabled: True # Capa de inflado habilitada.
+      always_send_full_costmap: True # Enviar siempre el mapa de costos local completo.
+
+
+global_costmap:
+  global_costmap:
+    ros__parameters:
+      update_frequency: 20.0 # Frecuencia de actualización del mapa de costos global.
+      publish_frequency: 20.0 # Frecuencia de publicación del mapa de costos global.
+      global_frame: map # Marco de referencia global utilizado por el mapa de costos global.
+      robot_base_frame: base_link # Marco de referencia de la base del robot.
+      use_sim_time: True # Utilizar tiempo simulado.
+      # robot_radius: 0.32 
+      footprint: "[ [0.29, 0.225], [0.29, -0.225], [-0.29, -0.225], [-0.29, 0.225] ]" # Huella del robot utilizada en el mapa de costos global.
+      footprint_padding: 0.03 # Margen de padding aplicado a la huella del robot en el mapa de costos global.
+
+      resolution: 0.05 # Resolución del mapa de costos global en metros por celda.
+      track_unknown_space: false # bke # Seguimiento del espacio desconocido desactivado.
+      plugins: ["static_layer", "obstacle_layer", "inflation_layer"]  # Plugins utilizados en el mapa de costos global.
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer" # Plugin utilizado para la capa de obstáculos del mapa de costos global.
+        enabled: True # Capa de obstáculos habilitada.
+        observation_sources: scan  # Fuentes de observación utilizadas en la capa de obstáculos.
+        scan:
+          topic: /scan # Tópico utilizado para recibir los datos del sensor láser.
+          sensor_frame: rplidar_link # Marco de referencia del sensor láser.
+          max_obstacle_height: 2.0 # Altura máxima de los obstáculos considerados.
+          clearing: True # Realizar despeje en el mapa de costos global.
+          marking: True  # Realizar marcado en el mapa de costos global
+          data_type: "LaserScan" # Tipo de datos del sensor láser.
+          raytrace_max_range: 10.0 # Rango máximo de trazado de rayos en el sensor láser.
+          raytrace_min_range: 0.2 # Rango mínimo de trazado de rayos en el sensor láser.
+          obstacle_max_range: 5.0 # Rango máximo de detección de obstáculos en el sensor láser.
+          obstacle_min_range: 0.2 # Rango mínimo de detección de obstáculos en el sensor láser.
+      static_layer:
+        plugin: "nav2_costmap_2d::StaticLayer" # Plugin utilizado para la capa estática del mapa de costos global.
+        map_subscribe_transient_local: True # Suscribirse al mapa estático en el ámbito local.
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer" # Plugin utilizado para la capa de inflado del mapa de costos global.
+        cost_scaling_factor: 2.0 # Factor de escalamiento de costos para la capa de inflado.
+        inflation_radius: 2.0 # Radio de inflado utilizado en la capa de inflado.
+      always_send_full_costmap: True # Enviar siempre el mapa de costos global completo.
+  global_costmap_client:
+    ros__parameters:
+      use_sim_time: True # Utilizar tiempo simulado para el cliente del mapa de costos global.
+  global_costmap_rclcpp_node:
+    ros__parameters:
+      use_sim_time: True # Utilizar tiempo simulado para el nodo del mapa de costos global.
+
+map_server:
+  ros__parameters:
+    use_sim_time: True # Utilizar tiempo simulado para el servidor de mapas.
+    yaml_filename: "etxea_mapa.yaml" # Nombre del archivo YAML que contiene el mapa.
+
+map_saver:
+  ros__parameters:
+    use_sim_time: True # Utilizar tiempo simulado para el nodo de guardado de mapas.
+    save_map_timeout: 5.0 # Tiempo máximo de espera para guardar el mapa.
+    free_thresh_default: 0.25 # Valor umbral para la clasificación de celdas como libres.
+    occupied_thresh_default: 0.65 # Valor umbral para la clasificación de celdas como ocupadas.
+    map_subscribe_transient_local: True # Suscribirse al mapa en el ámbito local.
+
+# planner_server:
+#   ros__parameters:
+#     expected_planner_frequency: 20.0
+#     use_sim_time: True
+#     planner_plugins: ["GridBased"]
+#     GridBased:
+#       plugin: "nav2_navfn_planner/NavfnPlanner"
+#       tolerance: 0.5
+#       use_astar: false
+#       allow_unknown: true
+
+planner_server:
+  ros__parameters:
+    planner_plugins: ["GridBased"] # Plugins utilizados en el servidor de planificación.
+    use_sim_time: True # Utilizar tiempo simulado para el servidor de planificación.
+    
+
+    GridBased:
+      plugin: "nav2_smac_planner/SmacPlannerHybrid" # Plugin utilizado para el planificador
+      downsample_costmap: false           # Indica si se debe reducir la resolución del mapa de costos.
+      downsampling_factor: 1              # multiplier for the resolution of the costmap layer (e.g. 2 on a 5cm costmap would be 10cm)
+      allow_unknown: true                 # allow traveling in unknown space
+      max_iterations: 1000000             # maximum total iterations to search for before failing (in case unreachable), set to -1 to disable
+      max_planning_time: 5.0              # max time in s for planner to plan, smooth
+      motion_model_for_search: "REEDS_SHEPP"    # Modelo de movimiento utilizado para la búsqueda: DUBIN, REDDS_SHEPP
+      angle_quantization_bins: 72         # Number of angle bins for search
+      analytic_expansion_ratio: 3.5       # The ratio to attempt analytic expansions during search for final approach.
+      analytic_expansion_max_length: 3.0  # For Hybrid/Lattice nodes: The maximum length of the analytic expansion to be considered valid to prevent unsafe shortcutting
+      minimum_turning_radius: 1.0        # minimum turning radius in m of path / vehicle
+      reverse_penalty: 50.0                # Penalty to apply if motion is reversing, must be => 1
+      change_penalty: 0.0                 # Penalty to apply if motion is changing directions (L to R), must be >= 0
+      non_straight_penalty: 1.2           # Penalty to apply if motion is non-straight, must be => 1
+      cost_penalty: 3.0                   # Penalty to apply to higher cost areas when adding into the obstacle map dynamic programming distance expansion heuristic. This drives the robot more towards the center of passages. A value between 1.3 - 3.5 is reasonable.
+      lookup_table_size: 20.0             # Size of the dubin/reeds-sheep distance window to cache, in meters.
+      cache_obstacle_heuristic: false     # Cache the obstacle map dynamic programming distance expansion heuristic between subsiquent replannings of the same goal location. Dramatically speeds up replanning performance (40x) if costmap is largely static.
+      smooth_path: False # was True                   # If true, does a simple and quick smoothing post-processing to the path
+
+      smoother:
+        max_iterations: 1000  # Número máximo de iteraciones para el suavizado de la trayectoria.
+        w_smooth: 0.1 # Peso utilizado para el suavizado de la trayectoria (antes era 0.3).
+        w_data: 0.3 # Peso utilizado para mantener los datos originales de la trayectoria (antes era 0.2).
+        tolerance: 1e-10
+        do_refinement: true # Indica si se debe realizar un refinamiento adicional en la trayectoria.
+
+planner_server_rclcpp_node:
+  ros__parameters:
+    use_sim_time: True
+
+recoveries_server:
+  ros__parameters:
+    costmap_topic: local_costmap/costmap_raw # Tópico utilizado para obtener el costmap local.
+    footprint_topic: local_costmap/published_footprint # Tópico utilizado para obtener el footprint del robot.
+    cycle_frequency: 10.0 # Frecuencia de ciclo del servidor de recuperación.
+    recovery_plugins: [ "backup", "wait"] # Lista de plugins de recuperación utilizados.
+    backup:
+      plugin: "nav2_recoveries/BackUp" # Plugin de recuperación de respaldo utilizado.
+    wait:
+      plugin: "nav2_recoveries/Wait" # Plugin de recuperación de espera utilizado.
+    global_frame: odom # Marco de referencia global utilizado.
+    robot_base_frame: base_link # Marco de referencia base del robot.
+    transform_timeout: 0.1 # Tiempo máximo de espera para obtener una transformación.
+    use_sim_time: true # Indica si se utiliza el tiempo simulado.
+    simulate_ahead_time: 2.0 # Tiempo de simulación anticipada.
+    max_rotational_vel: 1.0  # Velocidad angular máxima permitida durante la recuperación.
+    min_rotational_vel: 0.4 # Velocidad angular mínima permitida durante la recuperación.
+    rotational_acc_lim: 3.2 # Límite de aceleración angular durante la recuperación.
+
+robot_state_publisher:
+  ros__parameters:
+    use_sim_time: True
+
+
+#velocity_smoother:
+  #ros__parameters:
+    # smoothing_frequency: 20.0
+    # scale_velocities: false
+    # feedback: "OPEN_LOOP"
+    #max_velocity: [5.0, 0.0, 2.5]
+    # min_velocity: [-5.0, 0.0, -2.5]
+    # deadband_velocity: [0.0, 0.0, 0.0]
+    # velocity_timeout: 1.0
+    # max_accel: [2.5, 0.0, 3.2]
+    # max_decel: [-2.5, 0.0, -3.2]
+    # odom_topic: "odom"
+    # odom_duration: 0.1      
+
+velocity_smoother:
+  ros__parameters:
+    smoothing_frequency: 20.0             # Hz
+    scale_velocities: true                # true = adjust angular to keep same trajectory
+    feedback: "OPEN_LOOP"                 # CLOSED_LOOP means use velocities from odom, odom must be high rate compared to smoothing_frequency
+    max_velocity: [5.0, 0.0, 92.5]         # x, y, theta
+    min_velocity: [-5.0, 0.0, -92.5]       # x, y, theta, maximum reverse velocities (should be negative)
+    deadband_velocity: [0.0, 0.0, 0.0]    # velocities less than this will be translted to zero
+    velocity_timeout: 1.0                 # if no cmd_vel is sent after this time, zeros will be sent
+    max_accel: [2.5, 0.0, 933.2]  # Aceleraciones máximas permitidas en los ejes x, y, theta
+    max_decel: [-2.5, 0.0, -933.2]
+    odom_topic: "summit/odom"                    # topic for closed loop velocities
+    odom_duration: 0.1                    # time to buffer odometry to esimate speed
+
+
+waypoint_follower:
+  ros__parameters:
+    loop_rate: 20 # Frecuencia de ejecución del seguimiento de waypoints
+    stop_on_failure: false # Indica si se detiene el robot en caso de fallo en la ejecución de un waypoint
+    waypoint_task_executor_plugin: "wait_at_waypoint"   # Plugin utilizado para ejecutar las tareas de los waypoints
+    wait_at_waypoint: 
+      plugin: "nav2_waypoint_follower::WaitAtWaypoint" # Plugin específico para esperar en un waypoint
+      enabled: True # Indica si está habilitado el plugin
+      waypoint_pause_duration: 200    # Duración de la pausa en milisegundos al alcanzar un waypoint
+ 
