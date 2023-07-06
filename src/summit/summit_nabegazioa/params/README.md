@@ -5,6 +5,7 @@ nav2_params.yam:
                 -"nav2_smac_planner/SmacPlannerHybrid" planifikatzailea erabiltzen du.
 
 nav3_params.yam:
+
                 -Honekin ezin da atzeraka joan.
                 -DWB konrtroladorea erabiltzen du
                 -"nav2_navfn_planner/NavfnPlanner" planifikatzailea erabiltzen du.
@@ -13,5 +14,5 @@ nav4_params.yam:
 
                 -RPP konrtroladorea erabiltzen du
                 -"nav2_smac_planner/SmacPlannerHybrid" planifikatzailea erabiltzen du.
-								-Lehenengoarekin konparatuta aldaketa txiki batzuk. Sinpleagoa eta hobeagoa
+		-Lehenengoarekin konparatuta aldaketa txiki batzuk. Sinpleagoa eta hobeagoa
                 
