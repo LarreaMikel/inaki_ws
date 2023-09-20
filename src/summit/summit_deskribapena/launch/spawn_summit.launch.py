@@ -15,7 +15,7 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
 
     pkg_summit = get_package_share_directory('summit_deskribapena')
-    xacro_file = os.path.join(get_package_share_directory('summit_deskribapena'), 'models/', 'summit3.urdf.xacro')
+    xacro_file = os.path.join(get_package_share_directory('summit_deskribapena'), 'models/', 'summit2.urdf.xacro')
     assert os.path.exists(xacro_file), "The xacro doesnt exist in "+str(xacro_file)
 
     install_dir = get_package_prefix('summit_deskribapena')
