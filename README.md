@@ -2,6 +2,8 @@
 Exekutatu beharreko komandoak:
  
   sudo apt-get update
+
+  
 sudo apt-get upgrade
 
 Arazorik ez izateko, badaezpada exekutatu hurrengoa:
