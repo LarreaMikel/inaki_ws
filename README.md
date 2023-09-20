@@ -4,7 +4,7 @@ Exekutatu beharreko komandoak:
 *  sudo apt-get update
 *  sudo apt-get upgrade
 
-Arazorik ez izateko, badaezpada exekutatu hurrengoa:
+Arazorik ez izateko, badaezpada exekutatu hurrengoak:
 
 *  sudo apt update
 *  sudo apt install ros-humble-navigation2
